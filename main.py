@@ -1,18 +1,24 @@
 import webapp2
 import re
+import cgi
 
 
 USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
+EMAIL_RE = re.compile(r"^[\S]+@[\S]+.[\S]+$")
+PW_RE = re.compile(r"^.{3,20}$")
+
+
 def valid_username(username):
     return USER_RE.match(username)
 
-PW_RE = re.compile(r"^.{3,20}$")
+
 def valid_password(password):
     return PW_RE.match(password)
 
-EMAIL_RE = re.compile(r"^[\S]+@[\S]+.[\S]+$")
+
 def valid_email(email):
     return EMAIL_RE.match(email)
+
 
 def validate_inputs(username, password, verify, email):
     dict = {}
@@ -48,6 +54,9 @@ def validate_inputs(username, password, verify, email):
     else:
         dict['email'] = ''
         dict['error_email'] = ''
+
+    for key in dict:
+        dict[key] = cgi.escape(dict[key], quote=True)
 
     return dict
 
